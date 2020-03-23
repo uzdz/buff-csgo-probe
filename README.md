@@ -1,0 +1,1 @@
+## 利用Python Scrapy框架进行CSGO饰品价格探测（仅供娱乐）
