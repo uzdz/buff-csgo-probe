@@ -32,6 +32,8 @@ class BuffPipeline(object):
 
     def open_spider(self, spider):
         self.client = MongoClient(self.mongo_url, self.mongo_port)
+        db_admin = self.client['admin']
+        db_admin.authenticate('sa', 'sa')
         self.db = self.client[self.mongo_db]
 
     def process_item(self, item, spider):

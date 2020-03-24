@@ -14,7 +14,7 @@ BOT_NAME = 'buff'
 SPIDER_MODULES = ['buff.spiders']
 NEWSPIDER_MODULE = 'buff.spiders'
 
-MONGO_URL = 'localhost'
+MONGO_URL = '127.0.0.1'
 MONGO_PORT = 27017
 MONGO_DB = 'csgo'  # 查询的游戏所存储的DB
 MONGO_DB_GOODS_COLLECT = 'goods'  # 存储商品ID列表的Collection
@@ -23,7 +23,7 @@ EMAIL = "xxx@163.com"  # 设置信息变更所发送给的邮件
 EMAIL_PASSWORD = "xxx"  # 邮箱密码
 EMAIL_SERVER = "smtp.163.com"
 
-BUFF_SESSION = cookies = {'session': 'xxxx'}  # 网页登陆buff，通过控制台获取session，用于授权访问
+BUFF_SESSION = cookies = {'session': 'xxx'}  # 网页登陆buff，通过控制台获取session，用于授权访问
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6)' \

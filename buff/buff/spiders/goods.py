@@ -44,6 +44,8 @@ class GoodsSpider(scrapy.Spider):
     def start_requests(self):
 
         self.client = MongoClient(self.mongo_url, self.mongo_port)
+        db = self.client['admin']
+        db.authenticate('sa', 'sa')
         dbs = self.client.list_database_names()
         if self.mongo_db not in dbs:
             print("MongoDB：数据库不存在!")
@@ -120,22 +122,23 @@ class GoodsSpider(scrapy.Spider):
             item['good_name'] = good_name
 
             # 商品实例id
-            item['good_inst_id'] = str(good['id'])
+            item['good_inst_id'] = str(good.get('id', "None"))
 
             # 是否允许还价
-            item['can_bargain'] = str(good['can_bargain'])
+            item['can_bargain'] = str(good.get('can_bargain', "None"))
 
             # 描述
-            item['description'] = str(good['description'])
+            item['description'] = str(good.get('description', "None"))
 
             # 最低还价金额
-            item['lowest_bargain_price'] = float(good['lowest_bargain_price'])
+            item['lowest_bargain_price'] = float(good.get('lowest_bargain_price', "None"))
 
             # 此饰品价格
-            item['price'] = float(good['price'])
+            item['price'] = float(good.get('price', "None"))
 
             # 商品图片
-            item['image_url'] = str(good['asset_info']['info']['inspect_url'])
+            img = good['asset_info']['info']
+            item['image_url'] = str(img.get('inspect_url', "None"))
 
             # 商品初始化状态
             item['init'] = init
