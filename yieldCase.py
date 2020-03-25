@@ -27,6 +27,7 @@ def casetest():
     except StopIteration as ex:
         print("生成器无法找到下一个yield，抛出StopIteration异常！" + ex)
 
+
 if __name__ == '__main__':
     casetest()
 

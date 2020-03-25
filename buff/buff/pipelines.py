@@ -15,10 +15,13 @@ from scrapy.exceptions import DropItem
 
 class BuffPipeline(object):
 
-    def __init__(self, mongo_url, mongo_port, mongo_db):
+    def __init__(self, mongo_url, mongo_port, mongo_db, auth, auth_user_name, auth_password):
         self.mongo_url = mongo_url
         self.mongo_port = mongo_port
         self.mongo_db = mongo_db
+        self.auth = auth
+        self.auth_password = auth_password
+        self.auth_user_name = auth_user_name
         self.client = 'Undetermined'
         self.db = 'Undetermined'
 
@@ -27,13 +30,19 @@ class BuffPipeline(object):
         return cls(
             mongo_url=crawler.settings.get('MONGO_URL'),
             mongo_port=crawler.settings.get('MONGO_PORT'),
-            mongo_db=crawler.settings.get('MONGO_DB')
+            mongo_db=crawler.settings.get('MONGO_DB'),
+            auth=crawler.settings.get('MONGO_DB_AUTH'),
+            auth_user_name=crawler.settings.get('MONGO_DB_AUTH_USER_NAME'),
+            auth_password=crawler.settings.get('MONGO_DB_AUTH_PASSWORD')
         )
 
     def open_spider(self, spider):
         self.client = MongoClient(self.mongo_url, self.mongo_port)
-        db_admin = self.client['admin']
-        db_admin.authenticate('sa', 'sa')
+
+        if self.auth:
+            db_admin = self.client['admin']
+            db_admin.authenticate(self.auth_user_name, self.auth_password)
+
         self.db = self.client[self.mongo_db]
 
     def process_item(self, item, spider):

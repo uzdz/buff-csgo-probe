@@ -1,1 +1,1 @@
-*/1 * * * * sh /Users/uzdz/py_work/csgo/buff/job.sh >> /Users/uzdz/py_work/csgo/output.txt
+*/30 * * * * sh /Users/uzdz/py_work/csgo/job.sh >> /Users/uzdz/py_work/csgo/log/crontab.txt

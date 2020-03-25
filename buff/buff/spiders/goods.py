@@ -18,17 +18,21 @@ from items import BuffItem
 
 class GoodsSpider(scrapy.Spider):
     name = 'goods'
-    allowed_domains = ['https://buff.163.com']
+    allowed_domains = ['buff.163.com']
     start_urls = []
     author = 'uzdz'
     headers = {'content-type': 'charset=utf8'}
 
-    def __init__(self, mongo_url, mongo_port, mongo_db, goods_collect, session):
+    def __init__(self, mongo_url, mongo_port, mongo_db, goods_collect,
+                 session, auth, auth_user_name, auth_password):
         self.mongo_url = mongo_url
         self.mongo_port = mongo_port
         self.mongo_db = mongo_db
         self.goods_collect = goods_collect
         self.session = session
+        self.auth = auth
+        self.auth_password = auth_password
+        self.auth_user_name = auth_user_name
         self.client = 'Undetermined'
 
     @classmethod
@@ -38,14 +42,20 @@ class GoodsSpider(scrapy.Spider):
             mongo_port=crawler.settings.get('MONGO_PORT'),
             mongo_db=crawler.settings.get('MONGO_DB'),
             goods_collect=crawler.settings.get('MONGO_DB_GOODS_COLLECT'),
-            session=crawler.settings.get('BUFF_SESSION')
+            session=crawler.settings.get('BUFF_SESSION'),
+            auth=crawler.settings.get('MONGO_DB_AUTH'),
+            auth_user_name=crawler.settings.get('MONGO_DB_AUTH_USER_NAME'),
+            auth_password=crawler.settings.get('MONGO_DB_AUTH_PASSWORD')
         )
 
     def start_requests(self):
 
         self.client = MongoClient(self.mongo_url, self.mongo_port)
-        db = self.client['admin']
-        db.authenticate('sa', 'sa')
+
+        if self.auth:
+            db = self.client['admin']
+            db.authenticate(self.auth_user_name, self.auth_password)
+
         dbs = self.client.list_database_names()
         if self.mongo_db not in dbs:
             print("MongoDB：数据库不存在!")
@@ -91,6 +101,8 @@ class GoodsSpider(scrapy.Spider):
         good_id = str(header['good_id'], 'utf-8')
         init = bool(str(header['init'], 'utf-8'))
 
+        print("爬取到的数据：" + response.text)
+
         x = json.loads(response.text)
 
         # # 当前页码
@@ -109,7 +121,6 @@ class GoodsSpider(scrapy.Spider):
         # 商品名称
         good_name = x['data']['goods_infos'][good_id]['name']
 
-        now_time = datetime.datetime.now()
         print("【" + datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') + "】" + good_name + "，总共商品实例数量：" + str(len(x['data']['items'])))
 
         for good in x['data']['items']:

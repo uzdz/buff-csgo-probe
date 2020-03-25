@@ -14,10 +14,13 @@ BOT_NAME = 'buff'
 SPIDER_MODULES = ['buff.spiders']
 NEWSPIDER_MODULE = 'buff.spiders'
 
-MONGO_URL = '127.0.0.1'
+MONGO_URL = 'xxxxxx'
 MONGO_PORT = 27017
 MONGO_DB = 'csgo'  # 查询的游戏所存储的DB
 MONGO_DB_GOODS_COLLECT = 'goods'  # 存储商品ID列表的Collection
+MONGO_DB_AUTH = True
+MONGO_DB_AUTH_USER_NAME = 'xxx'
+MONGO_DB_AUTH_PASSWORD = 'xxx'
 
 EMAIL = "xxx@163.com"  # 设置信息变更所发送给的邮件
 EMAIL_PASSWORD = "xxx"  # 邮箱密码
@@ -67,9 +70,10 @@ DEFAULT_REQUEST_HEADERS = {
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'buff.middlewares.BuffDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+   # 'buff.middlewares.ChangeProxy': 0,
+   'buff.middlewares.ABuYunProxyMiddleware': 0,
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
@@ -109,4 +113,4 @@ LOG_ENABLED = True
 
 LOG_LEVEL = 'DEBUG'
 
-LOG_FILE = '/tmp/spider.log'
+LOG_FILE = '../logs/spider.log'

@@ -6,7 +6,9 @@
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
-
+import requests
+import json
+import base64
 
 class BuffSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
@@ -101,3 +103,44 @@ class BuffDownloaderMiddleware(object):
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+
+class ChangeProxy(object):
+
+    def __init__(self):
+        self.url = "http://daili.spbeen.com/get_api_json?token=BjJTb6DkpLwerEvQ8c7I2AeA&num=1"
+        self.proxy = ""
+        self._get_proxy()
+
+    def _get_proxy(self):
+        resp = requests.get(self.url)
+        print("代理IP获取结果：" + resp.text)
+        info = json.loads(resp.text)
+        self.proxy = info['data'][0]
+
+    def process_request(self, request, spider):
+        print("进行代理IP设置！")
+        request.meta["proxy"] = self.proxy
+
+
+
+# 代理服务器
+proxyServer = "http://http-dyn.abuyun.com:9020"
+
+# 代理隧道验证信息
+proxyUser = "H14325S5285477ED"
+proxyPass = "BA07D57A1F74A21D"
+
+# for Python2
+# proxyAuth = "Basic " + base64.b64encode(proxyUser + ":" + proxyPass)
+
+# for Python3
+proxyAuth = "Basic " + base64.urlsafe_b64encode(bytes((proxyUser + ":" + proxyPass), "ascii")).decode("utf8")
+
+class ABuYunProxyMiddleware(object):
+
+
+    def process_request(self, request, spider):
+        request.meta["proxy"] = proxyServer
+
+        request.headers["Proxy-Authorization"] = proxyAuth
