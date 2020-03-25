@@ -101,7 +101,7 @@ class GoodsSpider(scrapy.Spider):
         good_id = str(header['good_id'], 'utf-8')
         init = bool(str(header['init'], 'utf-8'))
 
-        print("爬取到的数据：" + response.text)
+        # print("爬取到的数据：" + response.text)
 
         x = json.loads(response.text)
 

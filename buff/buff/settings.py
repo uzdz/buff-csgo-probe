@@ -72,7 +72,7 @@ DEFAULT_REQUEST_HEADERS = {
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
    # 'buff.middlewares.ChangeProxy': 0,
-   'buff.middlewares.ABuYunProxyMiddleware': 0,
+   # 'buff.middlewares.ABuYunProxyMiddleware': 0,
 }
 
 # Enable or disable extensions
@@ -113,4 +113,4 @@ LOG_ENABLED = True
 
 LOG_LEVEL = 'DEBUG'
 
-LOG_FILE = '../logs/spider.log'
+LOG_FILE = '/tmp/logs/spider.log'
